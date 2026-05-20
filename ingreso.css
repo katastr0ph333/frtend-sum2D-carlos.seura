@@ -276,11 +276,78 @@ textarea {
     color: var(--secondary);
 }
 
+.error-message {
+    margin-top: 0.5rem;
+    color: var(--danger);
+    font-size: 0.92rem;
+}
+
+.campo-error {
+    border-color: var(--danger) !important;
+    box-shadow: 0 0 0 4px rgba(185, 28, 28, 0.16) !important;
+}
+
+.campo-ok {
+    border-color: #16a34a !important;
+    box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.16) !important;
+}
+
+fieldset.campo-error {
+    border-color: var(--danger) !important;
+}
+
+fieldset.campo-ok {
+    border-color: #16a34a !important;
+}
+
 .warning-field {
     border: 1px solid rgba(185, 28, 28, 0.18);
     border-radius: 12px;
     padding: 1rem 1.25rem;
     background-color: #fef2f2;
+}
+
+.confirmation-screen {
+    padding: 2rem 1rem;
+    background-color: #f8fafc;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    margin-top: 2rem;
+    box-shadow: var(--shadow);
+}
+
+.confirmation-screen.hidden {
+    display: none;
+}
+
+.confirmation-card {
+    text-align: center;
+}
+
+.confirmation-card h2 {
+    margin-bottom: 1rem;
+    color: var(--primary);
+}
+
+.confirmation-card p {
+    margin-bottom: 1rem;
+    color: var(--secondary);
+    line-height: 1.7;
+}
+
+.order-number {
+    display: inline-block;
+    margin: 1rem 0;
+    padding: 1rem 1.5rem;
+    background-color: var(--accent);
+    color: white;
+    border-radius: 999px;
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.confirmation-card .btn {
+    margin-top: 1rem;
 }
 
 .warning-text {

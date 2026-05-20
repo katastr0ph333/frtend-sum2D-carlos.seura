@@ -64,7 +64,7 @@
                                 Teléfono de contacto *
                                 <input type="tel" name="telefono" required>
                             </label>
-                            <fieldset class="field-group">
+                            <fieldset class="field-group" id="tipoClienteGroup">
                                 <legend>Tipo de cliente *</legend>
                                 <div class="radio-group">
                                     <label class="radio-label"><input type="radio" name="tipoCliente" value="Particular" checked> Particular</label>
@@ -222,7 +222,7 @@
                                 </select>
                             </label>
                         </div>
-                        <fieldset class="field-group">
+                        <fieldset class="field-group" id="tipoPersistenciaGroup">
                             <legend>El problema es *</legend>
                             <div class="radio-group">
                                 <label class="radio-label"><input type="radio" name="tipoPersistencia" value="Permanente" required> Permanente</label>
@@ -287,7 +287,7 @@
                                 </select>
                             </label>
                         </div>
-                        <fieldset class="field-group">
+                        <fieldset class="field-group" id="preferenciasContactoGroup">
                             <legend>Preferencia de contacto para notificaciones *</legend>
                             <div class="checkbox-group">
                                 <label class="checkbox-label"><input type="checkbox" name="preferenciasContacto" value="WhatsApp"> WhatsApp</label>
@@ -296,11 +296,11 @@
                             </div>
                         </fieldset>
                         <label class="checkbox-label required-checkbox">
-                            <input type="checkbox" name="aceptaDiagnostico" required>
+                            <input type="checkbox" id="aceptaDiagnostico" name="aceptaDiagnostico" required>
                             Acepto que el diagnóstico puede demorar hasta 48 horas hábiles *
                         </label>
                         <label class="checkbox-label required-checkbox">
-                            <input type="checkbox" name="aceptaTerminos" required>
+                            <input type="checkbox" id="aceptaTerminos" name="aceptaTerminos" required>
                             Acepto los <a href="#" class="link-inline">Términos y Condiciones</a> del servicio *
                         </label>
                     </fieldset>
@@ -315,157 +315,7 @@
         </section>
     </main>
 
-    <footer class="page-footer">
-        <div class="container footer-inner">
-            <p>TechFix - Servicio técnico. Todos los derechos reservados.</p>
-        </div>
-    </footer>
-
-    <script>
-        const tipoClienteInputs = document.querySelectorAll('input[name="tipoCliente"]');
-        const empresaFields = document.querySelector('.empresa-fields');
-        const tipoDispositivo = document.getElementById('tipoDispositivo');
-        const otroDispositivoLabel = document.getElementById('otroDispositivoLabel');
-        const marcaEquipo = document.getElementById('marcaEquipo');
-        const otraMarcaLabel = document.getElementById('otraMarcaLabel');
-        const garantiaCheckbox = document.getElementById('garantiaCheckbox');
-        const garantiaFields = document.getElementById('garantiaFields');
-        const modalidadEntregaInputs = document.querySelectorAll('input[name="modalidadEntrega"]');
-        const domicilioDireccionLabel = document.getElementById('domicilioDireccionLabel');
-        const direccionDomicilio = document.getElementById('direccionDomicilio');
-        const reparadoAntesCheckbox = document.getElementById('reparadoAntesCheckbox');
-        const reparadoAntesLabel = document.getElementById('reparadoAntesLabel');
-        const detalleReparadoAntes = document.getElementById('detalleReparadoAntes');
-        const descripcionProblema = document.getElementById('descripcionProblema');
-        const descripcionContador = document.getElementById('descripcionContador');
-        const reparadoAntesContador = document.getElementById('reparadoAntesContador');
-        const notificacionCheckboxes = document.querySelectorAll('input[name="preferenciasContacto"]');
-        const ingresoForm = document.getElementById('ingresoForm');
-
-        tipoClienteInputs.forEach(input => {
-            input.addEventListener('change', () => {
-                if (input.value === 'Empresa' && input.checked) {
-                    empresaFields.classList.remove('hidden');
-                } else if (input.value === 'Particular' && input.checked) {
-                    empresaFields.classList.add('hidden');
-                }
-            });
-        });
-
-        tipoDispositivo.addEventListener('change', () => {
-            if (tipoDispositivo.value === 'Otro') {
-                otroDispositivoLabel.classList.remove('hidden');
-                document.getElementById('otroDispositivo').required = true;
-            } else {
-                otroDispositivoLabel.classList.add('hidden');
-                document.getElementById('otroDispositivo').required = false;
-            }
-        });
-
-        marcaEquipo.addEventListener('change', () => {
-            if (marcaEquipo.value === 'Otra') {
-                otraMarcaLabel.classList.remove('hidden');
-                document.getElementById('otraMarca').required = true;
-            } else {
-                otraMarcaLabel.classList.add('hidden');
-                document.getElementById('otraMarca').required = false;
-            }
-        });
-
-        garantiaCheckbox.addEventListener('change', () => {
-            if (garantiaCheckbox.checked) {
-                garantiaFields.classList.remove('hidden');
-            } else {
-                garantiaFields.classList.add('hidden');
-            }
-        });
-
-        modalidadEntregaInputs.forEach(input => {
-            input.addEventListener('change', () => {
-                if (input.value === 'Domicilio' && input.checked) {
-                    domicilioDireccionLabel.classList.remove('hidden');
-                    direccionDomicilio.required = true;
-                } else if (input.checked) {
-                    domicilioDireccionLabel.classList.add('hidden');
-                    direccionDomicilio.required = false;
-                }
-            });
-        });
-
-        reparadoAntesCheckbox.addEventListener('change', () => {
-            if (reparadoAntesCheckbox.checked) {
-                reparadoAntesLabel.classList.remove('hidden');
-                detalleReparadoAntes.required = false;
-            } else {
-                reparadoAntesLabel.classList.add('hidden');
-                detalleReparadoAntes.required = false;
-                detalleReparadoAntes.value = '';
-                reparadoAntesContador.textContent = '0 / 300';
-            }
-        });
-
-        const updateContador = (element, counter, max) => {
-            const length = element.value.length;
-            counter.textContent = `${length} / ${max}`;
-        };
-
-        descripcionProblema.addEventListener('input', () => {
-            updateContador(descripcionProblema, descripcionContador, 500);
-        });
-
-        detalleReparadoAntes.addEventListener('input', () => {
-            updateContador(detalleReparadoAntes, reparadoAntesContador, 300);
-        });
-
-        ingresoForm.addEventListener('submit', function(event) {
-            const email = this.email.value;
-            const emailConfirm = this.emailConfirm.value;
-            const notificacionSeleccionada = Array.from(notificacionCheckboxes).some(cb => cb.checked);
-
-            if (email !== emailConfirm) {
-                event.preventDefault();
-                alert('Los correos electrónicos deben coincidir.');
-                return;
-            }
-
-            if (!notificacionSeleccionada) {
-                event.preventDefault();
-                alert('Seleccione al menos un medio de notificación.');
-                return;
-            }
-
-            if (domicilioDireccionLabel.classList.contains('hidden') === false && !direccionDomicilio.value.trim()) {
-                event.preventDefault();
-                alert('Ingrese la dirección completa para el retiro a domicilio.');
-                return;
-            }
-
-            event.preventDefault();
-            alert('Formulario enviado. Gracias por registrar tu equipo.');
-            this.reset();
-            empresaFields.classList.add('hidden');
-            otroDispositivoLabel.classList.add('hidden');
-            otraMarcaLabel.classList.add('hidden');
-            garantiaFields.classList.add('hidden');
-            domicilioDireccionLabel.classList.add('hidden');
-            reparadoAntesLabel.classList.add('hidden');
-            descripcionContador.textContent = '0 / 500';
-            reparadoAntesContador.textContent = '0 / 300';
-        });
-
-        ingresoForm.addEventListener('reset', () => {
-            empresaFields.classList.add('hidden');
-            otroDispositivoLabel.classList.add('hidden');
-            otraMarcaLabel.classList.add('hidden');
-            garantiaFields.classList.add('hidden');
-            domicilioDireccionLabel.classList.add('hidden');
-            reparadoAntesLabel.classList.add('hidden');
-            direccionDomicilio.required = false;
-            document.querySelector('#otroDispositivo').required = false;
-            document.querySelector('#otraMarca').required = false;
-            descripcionContador.textContent = '0 / 500';
-            reparadoAntesContador.textContent = '0 / 300';
-        });
-    </script>
+    <div id="confirmationScreen" class="confirmation-screen hidden"></div>
+    <script src="validaciones.js" defer></script>
 </body>
 </html>
