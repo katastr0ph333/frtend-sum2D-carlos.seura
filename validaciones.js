@@ -30,6 +30,8 @@ document.addEventListener('DOMContentLoaded', () => {
         preferenciasContacto: document.getElementsByName('preferenciasContacto'),
         aceptaDiagnostico: document.getElementById('aceptaDiagnostico'),
         aceptaTerminos: document.getElementById('aceptaTerminos'),
+        presupuestoMaximo: document.querySelector('[name="presupuestoMaximo"]'),
+        horarioPreferido: document.querySelector('[name="horarioPreferido"]'),
     };
 
     const selectors = {
@@ -186,13 +188,47 @@ document.addEventListener('DOMContentLoaded', () => {
     const validateReparadoAntes = () => {
         if (fields.reparadoAntes.checked) {
             const value = fields.detalleReparadoAntes.value.trim();
-            const valid = value.length >= 10;
-            setStatus(fields.detalleReparadoAntes, valid, valid ? '' : 'Describe la reparación anterior con al menos 10 caracteres.');
+            const valid = value.length <= 300;
+            setStatus(fields.detalleReparadoAntes, valid, valid ? '' : 'El detalle no puede superar 300 caracteres.');
             return valid;
         }
         fields.detalleReparadoAntes.classList.remove('campo-error', 'campo-ok');
         removeMessage(fields.detalleReparadoAntes);
         return true;
+    };
+
+    const validateModalidadEntrega = () => {
+        const selected = getSelectedRadio(selectors.modalidadEntrega);
+        const valid = selected === 'Local' || selected === 'Domicilio';
+        setGroupStatus('#modalidadEntregaGroup', valid, valid ? '' : 'Selecciona una modalidad de entrega.');
+        return valid;
+    };
+
+    const validateDireccionDomicilio = () => {
+        const selected = getSelectedRadio(selectors.modalidadEntrega);
+        if (selected === 'Domicilio') {
+            const value = selectors.direccionDomicilio.value.trim();
+            const valid = value.length >= 10;
+            setStatus(selectors.direccionDomicilio, valid, valid ? '' : 'La dirección debe tener al menos 10 caracteres.');
+            return valid;
+        }
+        selectors.direccionDomicilio.classList.remove('campo-error', 'campo-ok');
+        removeMessage(selectors.direccionDomicilio);
+        return true;
+    };
+
+    const validatePresupuesto = () => {
+        const value = fields.presupuestoMaximo.value;
+        const valid = value !== '';
+        setStatus(fields.presupuestoMaximo, valid, valid ? '' : 'Selecciona un presupuesto autorizado.');
+        return valid;
+    };
+
+    const validateHorarioPreferido = () => {
+        const value = fields.horarioPreferido.value;
+        const valid = value !== '';
+        setStatus(fields.horarioPreferido, valid, valid ? '' : 'Selecciona un horario de contacto.');
+        return valid;
     };
 
     const validatePreferenciasContacto = () => {
@@ -315,6 +351,10 @@ document.addEventListener('DOMContentLoaded', () => {
             validateTipoPersistencia(),
             validateDescripcionProblema(),
             validateReparadoAntes(),
+            validateModalidadEntrega(),
+            validateDireccionDomicilio(),
+            validatePresupuesto(),
+            validateHorarioPreferido(),
             validatePreferenciasContacto(),
             validateGarantia(),
             validateAcepta(),
@@ -388,6 +428,13 @@ document.addEventListener('DOMContentLoaded', () => {
     Array.from(fields.tipoPersistencia).forEach((radio) => {
         radio.addEventListener('change', validateTipoPersistencia);
     });
+    Array.from(selectors.modalidadEntrega).forEach((radio) => {
+        radio.addEventListener('change', () => {
+            togglemodalidadEntrega();
+            validateModalidadEntrega();
+            validateDireccionDomicilio();
+        });
+    });
     fields.descripcionProblema.addEventListener('input', (event) => {
         updateCounter(event.target, 'descripcionContador', 500);
         validateDescripcionProblema();
@@ -403,6 +450,8 @@ document.addEventListener('DOMContentLoaded', () => {
     Array.from(fields.preferenciasContacto).forEach((checkbox) => {
         checkbox.addEventListener('change', validatePreferenciasContacto);
     });
+    fields.presupuestoMaximo.addEventListener('change', validatePresupuesto);
+    fields.horarioPreferido.addEventListener('change', validateHorarioPreferido);
     fields.aceptaDiagnostico.addEventListener('change', validateAcepta);
     fields.aceptaTerminos.addEventListener('change', validateAcepta);
 
@@ -410,12 +459,6 @@ document.addEventListener('DOMContentLoaded', () => {
         radio.addEventListener('change', () => {
             toggleempresaFields();
             validateTipoCliente();
-        });
-    });
-
-    Array.from(selectors.modalidadEntrega).forEach((radio) => {
-        radio.addEventListener('change', () => {
-            togglemodalidadEntrega();
         });
     });
 
