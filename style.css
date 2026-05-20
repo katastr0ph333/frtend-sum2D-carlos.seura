@@ -275,6 +275,137 @@ html {
     line-height: 1.8;
 }
 
+.servicio-time {
+    margin-top: 1rem;
+    color: var(--color-secondary);
+    font-weight: 700;
+}
+
+/* Marcas y dispositivos atendidos */
+.marcas {
+    padding: 80px 20px;
+    background-color: var(--color-white);
+}
+
+.marcas h2 {
+    text-align: center;
+    font-size: 2.5rem;
+    color: var(--color-secondary);
+    margin-bottom: 2.5rem;
+}
+
+.marcas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1rem;
+    justify-items: center;
+}
+
+.marca-item {
+    width: 100%;
+    max-width: 200px;
+    background: var(--color-light);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: 1rem 1.2rem;
+    text-align: center;
+    color: var(--color-secondary);
+    font-weight: 700;
+    box-shadow: var(--shadow);
+}
+
+/* Precios referenciales */
+.precios {
+    padding: 80px 20px;
+    background-color: var(--color-light);
+}
+
+.precios h2 {
+    text-align: center;
+    font-size: 2.5rem;
+    color: var(--color-secondary);
+    margin-bottom: 2.5rem;
+}
+
+.tabla-precios-wrapper {
+    overflow-x: auto;
+    padding-bottom: 1rem;
+}
+
+.tabla-precios {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 700px;
+    background-color: var(--color-white);
+    box-shadow: var(--shadow);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.tabla-precios th,
+.tabla-precios td {
+    padding: 1rem 1.2rem;
+    border: 1px solid var(--color-border);
+    text-align: left;
+}
+
+.tabla-precios thead th {
+    background-color: var(--color-secondary);
+    color: var(--color-white);
+    font-weight: 600;
+}
+
+.tabla-precios tbody tr:nth-child(even) {
+    background-color: #f8fafc;
+}
+
+.tabla-precios tbody tr:hover {
+    background-color: #eef2ff;
+}
+
+/* Testimonios */
+.testimonios {
+    padding: 80px 20px;
+    background-color: var(--color-white);
+}
+
+.testimonios h2 {
+    text-align: center;
+    font-size: 2.5rem;
+    color: var(--color-secondary);
+    margin-bottom: 2.5rem;
+}
+
+.testimonios-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+}
+
+.testimonio-card {
+    background-color: var(--color-light);
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--color-border);
+}
+
+.testimonio-text {
+    color: var(--color-secondary);
+    margin-bottom: 1.5rem;
+    line-height: 1.8;
+}
+
+.testimonio-author {
+    font-weight: 700;
+    margin-bottom: 0.8rem;
+}
+
+.testimonio-rating {
+    color: #f59e0b;
+    font-size: 1.1rem;
+}
+
 /* Sección Sobre Nosotros */
 .nosotros {
     padding: 80px 20px;
@@ -516,6 +647,54 @@ html {
     background-color: var(--color-secondary);
     color: var(--color-white);
     padding: 2rem 20px;
+}
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(180px, 1fr));
+    gap: 2rem;
+    align-items: start;
+    margin-bottom: 1.5rem;
+}
+
+.footer-brand h2 {
+    color: var(--color-accent);
+    margin-bottom: 0.75rem;
+}
+
+.footer-brand p,
+.footer-info p,
+.footer-contacto p,
+.footer-redes a {
+    color: var(--color-light);
+    line-height: 1.8;
+}
+
+.footer-info h4,
+.footer-contacto h4,
+.footer-redes h4 {
+    margin-bottom: 0.75rem;
+    color: var(--color-white);
+}
+
+.social-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.social-links a {
+    color: var(--color-light);
+    text-decoration: none;
+}
+
+.social-links a:hover {
+    color: var(--color-accent);
+}
+
+.footer-copy {
+    border-top: 1px solid rgba(255,255,255,0.12);
+    padding-top: 1rem;
     text-align: center;
 }
 
