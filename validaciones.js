@@ -318,21 +318,66 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const showConfirmation = () => {
+        // Gather displayed values
+        const cliente = fields.nombre.value.trim();
+        let dispositivo = fields.tipoDispositivo.value || '';
+        if (dispositivo === 'Otro') dispositivo = document.getElementById('otroDispositivo')?.value || 'Otro';
+        let marca = fields.marca.value || '';
+        if (marca === 'Otra') marca = document.getElementById('otraMarca')?.value || 'Otra';
+        const modelo = fields.modelo.value || '';
+        const modalidad = getSelectedRadio(selectors.modalidadEntrega) || '';
+
         form.classList.add('hidden');
         confirmationScreen.classList.remove('hidden');
         const orderNumber = `TF-${Math.floor(100000 + Math.random() * 900000)}`;
         confirmationScreen.innerHTML = `
             <div class="confirmation-card">
                 <h2>Ingreso confirmado</h2>
-                <p>Tu equipo fue registrado correctamente en TechFix.</p>
+                <p>Nombre: ${cliente}</p>
+                <p>Dispositivo: ${dispositivo}</p>
+                <p>Marca: ${marca}</p>
+                <p>Modelo: ${modelo}</p>
+                <p>Modalidad de entrega: ${modalidad}</p>
                 <p class="order-number">Orden: ${orderNumber}</p>
-                <p>Guarda este número para seguimiento. Te contactaremos pronto.</p>
-                <a href="index.html" class="btn btn-primary">Volver al inicio</a>
+                <p>Su equipo será diagnosticado en un plazo de hasta 48 horas hábiles. Guardá el número de orden para seguimiento.</p>
+                <div class="confirmation-actions">
+                    <a href="index.html" class="btn btn-primary">Volver al inicio</a>
+                    <button id="ingresarOtroBtn" class="btn btn-secondary">Ingresar otro equipo</button>
+                </div>
             </div>
         `;
+
+        // Attach listener to "Ingresar otro equipo"
+        const otroBtn = document.getElementById('ingresarOtroBtn');
+        if (otroBtn) {
+            otroBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                // Reset form and UI
+                form.reset();
+                // Clear validation visuals
+                const inputs = form.querySelectorAll('input, select, textarea');
+                inputs.forEach((input) => {
+                    input.classList.remove('campo-error', 'campo-ok');
+                    removeMessage(input);
+                });
+                // Hide confirmation and show form
+                confirmationScreen.classList.add('hidden');
+                form.classList.remove('hidden');
+                // Re-run toggles to ensure conditional UI is correct
+                toggleempresaFields();
+                toggletipoDispositivo();
+                togglemarcaEquipo();
+                togglegarantiaFields();
+                togglemodalidadEntrega();
+                toggleReparadoAntes();
+                removeSummary();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
     };
 
     const validateForm = () => {
+        // Backwards-compatible simple boolean validator
         const validations = [
             validateNombre(),
             validateDni(),
@@ -363,6 +408,65 @@ document.addEventListener('DOMContentLoaded', () => {
         return validations.every(Boolean);
     };
 
+    const createOrUpdateSummary = (count) => {
+        let summary = document.getElementById('formErrorSummary');
+        if (!summary) {
+            summary = document.createElement('div');
+            summary.id = 'formErrorSummary';
+            summary.className = 'form-error-summary';
+            summary.style.background = '#ffe6e6';
+            summary.style.border = '1px solid #ffb3b3';
+            summary.style.padding = '10px';
+            summary.style.marginBottom = '12px';
+            summary.style.borderRadius = '4px';
+            summary.style.color = '#800';
+            form.insertBefore(summary, form.firstChild);
+        }
+        summary.textContent = `Se encontraron ${count} error(es). Revisa los campos marcados.`;
+    };
+
+    const removeSummary = () => {
+        const summary = document.getElementById('formErrorSummary');
+        if (summary) summary.remove();
+    };
+
+    const validateFormDetailed = () => {
+        // Run validators in order and collect failures with a representative element to scroll to
+        const failures = [];
+        const pushIfFalse = (ok, el) => {
+            if (!ok) failures.push(el || null);
+        };
+
+        pushIfFalse(validateNombre(), fields.nombre);
+        pushIfFalse(validateDni(), fields.dni);
+        pushIfFalse(validateEmail(), fields.email);
+        pushIfFalse(validateEmailConfirm(), fields.emailConfirm);
+        pushIfFalse(validateTelefono(), fields.telefono);
+        pushIfFalse(validateTipoCliente(), document.querySelector('#tipoClienteGroup'));
+        pushIfFalse(validateProvincia(), fields.provincia);
+        pushIfFalse(validateLocalidad(), fields.localidad);
+        pushIfFalse(validateTipoDispositivo(), fields.tipoDispositivo);
+        if (fields.tipoDispositivo.value === 'Otro') pushIfFalse(validateTipoDispositivo(), document.getElementById('otroDispositivo'));
+        pushIfFalse(validateMarca(), fields.marca);
+        if (fields.marca.value === 'Otra') pushIfFalse(validateMarca(), document.getElementById('otraMarca'));
+        pushIfFalse(validateModelo(), fields.modelo);
+        pushIfFalse(validateSistemaOperativo(), fields.sistemaOperativo);
+        pushIfFalse(validateTipoProblema(), fields.tipoProblema);
+        pushIfFalse(validateDesdeCuando(), fields.desdeCuando);
+        pushIfFalse(validateTipoPersistencia(), document.querySelector('#tipoPersistenciaGroup'));
+        pushIfFalse(validateDescripcionProblema(), fields.descripcionProblema);
+        pushIfFalse(validateReparadoAntes(), document.getElementById('detalleReparadoAntes'));
+        pushIfFalse(validateModalidadEntrega(), document.querySelector('#modalidadEntregaGroup'));
+        pushIfFalse(validateDireccionDomicilio(), selectors.direccionDomicilio);
+        pushIfFalse(validatePresupuesto(), fields.presupuestoMaximo);
+        pushIfFalse(validateHorarioPreferido(), fields.horarioPreferido);
+        pushIfFalse(validatePreferenciasContacto(), document.querySelector('#preferenciasContactoGroup'));
+        pushIfFalse(validateGarantia(), document.getElementById('ordenCompra'));
+        pushIfFalse(validateAcepta(), fields.aceptaTerminos || fields.aceptaDiagnostico);
+
+        return failures.filter(Boolean);
+    };
+
     const toggleempresaFields = () => {
         const value = getSelectedRadio(fields.tipoCliente);
         const container = document.querySelector('.empresa-fields');
@@ -370,41 +474,98 @@ document.addEventListener('DOMContentLoaded', () => {
             container.classList.remove('hidden');
         } else {
             container.classList.add('hidden');
+            const empresaNombre = document.querySelector('[name="empresaNombre"]');
+            const empresaCuit = document.querySelector('[name="empresaCuit"]');
+            if (empresaNombre) {
+                empresaNombre.value = '';
+                empresaNombre.classList.remove('campo-error', 'campo-ok');
+                removeMessage(empresaNombre);
+            }
+            if (empresaCuit) {
+                empresaCuit.value = '';
+                empresaCuit.classList.remove('campo-error', 'campo-ok');
+                removeMessage(empresaCuit);
+            }
         }
     };
 
     const toggletipoDispositivo = () => {
         const other = fields.tipoDispositivo.value === 'Otro';
         document.getElementById('otroDispositivoLabel').classList.toggle('hidden', !other);
-        document.getElementById('otroDispositivo').required = other;
+        const otro = document.getElementById('otroDispositivo');
+        otro.required = other;
+        otro.classList.toggle('hidden', !other);
+        if (!other) {
+            otro.value = '';
+            otro.classList.remove('campo-error', 'campo-ok');
+            removeMessage(otro);
+        }
     };
 
     const togglemarcaEquipo = () => {
         const other = fields.marca.value === 'Otra';
         document.getElementById('otraMarcaLabel').classList.toggle('hidden', !other);
-        document.getElementById('otraMarca').required = other;
+        const otra = document.getElementById('otraMarca');
+        otra.required = other;
+        otra.classList.toggle('hidden', !other);
+        if (!other) {
+            otra.value = '';
+            otra.classList.remove('campo-error', 'campo-ok');
+            removeMessage(otra);
+        }
     };
 
     const togglegarantiaFields = () => {
-        document.getElementById('garantiaFields').classList.toggle('hidden', !fields.garantia.checked);
+        const cont = document.getElementById('garantiaFields');
+        cont.classList.toggle('hidden', !fields.garantia.checked);
+        const orden = document.getElementById('ordenCompra');
+        if (!fields.garantia.checked) {
+            orden.value = '';
+            orden.classList.remove('campo-error', 'campo-ok');
+            removeMessage(orden);
+        }
     };
 
     const togglemodalidadEntrega = () => {
         const selected = getSelectedRadio(selectors.modalidadEntrega);
         const show = selected === 'Domicilio';
-        selectors.domicilioDireccionLabel.classList.toggle('hidden', !show);
-        selectors.direccionDomicilio.required = show;
+        const label = selectors.domicilioDireccionLabel;
+        label.classList.toggle('hidden', !show);
+        const dir = selectors.direccionDomicilio;
+        dir.required = show;
+        if (!show) {
+            dir.value = '';
+            dir.classList.remove('campo-error', 'campo-ok');
+            removeMessage(dir);
+        }
     };
 
     const toggleReparadoAntes = () => {
         const show = document.getElementById('reparadoAntesCheckbox').checked;
-        document.getElementById('reparadoAntesLabel').classList.toggle('hidden', !show);
+        const label = document.getElementById('reparadoAntesLabel');
+        label.classList.toggle('hidden', !show);
+        const detalle = document.getElementById('detalleReparadoAntes');
+        if (!show) {
+            detalle.value = '';
+            detalle.classList.remove('campo-error', 'campo-ok');
+            removeMessage(detalle);
+            updateCounter(detalle, 'reparadoAntesContador', 300);
+        }
     };
 
     const updateCounter = (input, counterId, max) => {
         const counter = document.getElementById(counterId);
         if (counter) {
             counter.textContent = `${input.value.length} / ${max}`;
+            // color thresholds: orange >80%, red at max
+            const pct = input.value.length / max;
+            if (input.value.length >= max) {
+                counter.style.color = 'red';
+            } else if (pct >= 0.8) {
+                counter.style.color = 'orange';
+            } else {
+                counter.style.color = '';
+            }
         }
     };
 
@@ -464,11 +625,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
     form.addEventListener('submit', (event) => {
         event.preventDefault();
-        if (validateForm()) {
-            showConfirmation();
-        } else {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+        removeSummary();
+        const failures = validateFormDetailed();
+        if (failures.length > 0) {
+            createOrUpdateSummary(failures.length);
+            // Scroll to first invalid element
+            const first = failures[0];
+            if (first && typeof first.scrollIntoView === 'function') {
+                setTimeout(() => first.scrollIntoView({ behavior: 'smooth', block: 'center' }), 50);
+            } else {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+            return;
         }
+
+        // Passed all validations
+        removeSummary();
+        showConfirmation();
     });
 
     form.addEventListener('reset', () => {
@@ -486,6 +659,16 @@ document.addEventListener('DOMContentLoaded', () => {
             selectors.direccionDomicilio.required = false;
             document.getElementById('otroDispositivo').required = false;
             document.getElementById('otraMarca').required = false;
+            // Clear conditional values
+            const empresaNombre = document.querySelector('[name="empresaNombre"]');
+            const empresaCuit = document.querySelector('[name="empresaCuit"]');
+            if (empresaNombre) empresaNombre.value = '';
+            if (empresaCuit) empresaCuit.value = '';
+            const otro = document.getElementById('otroDispositivo'); if (otro) otro.value = '';
+            const otra = document.getElementById('otraMarca'); if (otra) otra.value = '';
+            const orden = document.getElementById('ordenCompra'); if (orden) orden.value = '';
+            const detalle = document.getElementById('detalleReparadoAntes'); if (detalle) detalle.value = '';
+            const dir = document.getElementById('direccionDomicilio'); if (dir) dir.value = '';
             updateCounter(document.getElementById('descripcionProblema'), 'descripcionContador', 500);
             updateCounter(document.getElementById('detalleReparadoAntes'), 'reparadoAntesContador', 300);
         }, 10);
