@@ -158,6 +158,8 @@ img {
 form {
     display: grid;
     gap: 2rem;
+    max-width: 750px;
+    margin: 0 auto;
 }
 
 fieldset {
@@ -172,6 +174,17 @@ legend {
     font-size: 1.1rem;
     font-weight: 700;
     padding: 0 0.75rem;
+}
+
+.field-group {
+    padding: 1rem 0 0;
+}
+
+.radio-group,
+.checkbox-group {
+    display: grid;
+    gap: 0.85rem;
+    margin-top: 0.75rem;
 }
 
 .grid-2 {
@@ -197,6 +210,7 @@ textarea {
     background-color: #fff;
     color: var(--text);
     font-size: 1rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 input:focus,
@@ -204,7 +218,17 @@ select:focus,
 textarea:focus {
     outline: none;
     border-color: var(--accent);
-    box-shadow: 0 0 0 4px rgba(6, 182, 212, 0.12);
+    box-shadow: 0 0 0 4px rgba(6, 182, 212, 0.15);
+}
+
+.campo-error {
+    border-color: var(--danger) !important;
+    box-shadow: 0 0 0 4px rgba(185, 28, 28, 0.16) !important;
+}
+
+.campo-ok {
+    border-color: #16a34a !important;
+    box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.16) !important;
 }
 
 textarea {
@@ -237,6 +261,21 @@ textarea {
     color: var(--muted);
 }
 
+.field-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 0.5rem;
+    font-size: 0.92rem;
+    color: var(--muted);
+}
+
+.counter {
+    font-weight: 700;
+    color: var(--secondary);
+}
+
 .warning-field {
     border: 1px solid rgba(185, 28, 28, 0.18);
     border-radius: 12px;
@@ -252,11 +291,24 @@ textarea {
 
 .form-actions {
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
 }
 
 .form-actions .btn {
-    width: 220px;
+    min-width: 170px;
+    width: auto;
+}
+
+.btn-link {
+    background-color: transparent;
+    color: var(--secondary);
+    border: 1px solid var(--border);
+}
+
+.btn-link:hover {
+    background-color: rgba(30, 64, 175, 0.08);
 }
 
 .hidden {

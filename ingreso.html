@@ -64,11 +64,13 @@
                                 Teléfono de contacto *
                                 <input type="tel" name="telefono" required>
                             </label>
-                            <div class="customer-type">
-                                <p>Tipo de cliente *</p>
-                                <label class="radio-label"><input type="radio" name="tipoCliente" value="Particular" checked> Particular</label>
-                                <label class="radio-label"><input type="radio" name="tipoCliente" value="Empresa"> Empresa</label>
-                            </div>
+                            <fieldset class="field-group">
+                                <legend>Tipo de cliente *</legend>
+                                <div class="radio-group">
+                                    <label class="radio-label"><input type="radio" name="tipoCliente" value="Particular" checked> Particular</label>
+                                    <label class="radio-label"><input type="radio" name="tipoCliente" value="Empresa"> Empresa</label>
+                                </div>
+                            </fieldset>
                         </div>
                         <div class="grid-2 empresa-fields hidden">
                             <label>
@@ -194,37 +196,119 @@
 
                     <fieldset>
                         <legend>C — Descripción del problema</legend>
+                        <div class="grid-2">
+                            <label>
+                                Tipo de problema principal *
+                                <select name="tipoProblema" required>
+                                    <option value="">Selecciona un tipo</option>
+                                    <option value="No enciende">No enciende</option>
+                                    <option value="Pantalla dañada">Pantalla dañada</option>
+                                    <option value="Lentitud o rendimiento">Lentitud o rendimiento</option>
+                                    <option value="Virus o malware">Virus o malware</option>
+                                    <option value="Problema de red o conectividad">Problema de red o conectividad</option>
+                                    <option value="Daño por líquido">Daño por líquido</option>
+                                    <option value="Sonido">Sonido</option>
+                                    <option value="Otro">Otro</option>
+                                </select>
+                            </label>
+                            <label>
+                                Desde cuándo ocurre el problema *
+                                <select name="desdeCuando" required>
+                                    <option value="">Selecciona una opción</option>
+                                    <option value="Hoy">Hoy</option>
+                                    <option value="Hace algunos días">Hace algunos días</option>
+                                    <option value="Hace semanas">Hace semanas</option>
+                                    <option value="Hace meses">Hace meses</option>
+                                </select>
+                            </label>
+                        </div>
+                        <fieldset class="field-group">
+                            <legend>El problema es *</legend>
+                            <div class="radio-group">
+                                <label class="radio-label"><input type="radio" name="tipoPersistencia" value="Permanente" required> Permanente</label>
+                                <label class="radio-label"><input type="radio" name="tipoPersistencia" value="Intermitente"> Intermitente</label>
+                            </div>
+                        </fieldset>
                         <label>
-                            Descripción detallada *
-                            <textarea name="descripcionProblema" rows="5" required></textarea>
+                            Descripción detallada del problema *
+                            <textarea name="descripcionProblema" id="descripcionProblema" rows="5" minlength="20" maxlength="500" required></textarea>
+                            <div class="field-footer">
+                                <span class="field-note">Mínimo 20 caracteres, máximo 500.</span>
+                                <span class="counter" id="descripcionContador">0 / 500</span>
+                            </div>
+                        </label>
+                        <fieldset class="field-group">
+                            <legend>¿Ya intentaste repararlo o lo llevaste a otro técnico?</legend>
+                            <label class="checkbox-label"><input type="checkbox" id="reparadoAntesCheckbox" name="reparadoAntes"> Sí, lo intenté o ya pasó por otro técnico</label>
+                        </fieldset>
+                        <label class="hidden" id="reparadoAntesLabel">
+                            Describí qué se hizo anteriormente
+                            <textarea name="detalleReparadoAntes" id="detalleReparadoAntes" rows="4" maxlength="300"></textarea>
+                            <div class="field-footer">
+                                <span class="field-note">Máximo 300 caracteres.</span>
+                                <span class="counter" id="reparadoAntesContador">0 / 300</span>
+                            </div>
                         </label>
                     </fieldset>
 
                     <fieldset>
-                        <legend>D — Preferencias de contacto y entrega</legend>
+                        <legend>D — Preferencias de entrega y confirmación</legend>
+                        <fieldset class="field-group">
+                            <legend>Modalidad de entrega *</legend>
+                            <div class="radio-group">
+                                <label class="radio-label"><input type="radio" name="modalidadEntrega" value="Local" required> Lo llevo personalmente al local</label>
+                                <label class="radio-label"><input type="radio" name="modalidadEntrega" value="Domicilio"> Solicito retiro a domicilio</label>
+                            </div>
+                        </fieldset>
+                        <label class="hidden" id="domicilioDireccionLabel">
+                            Dirección completa para retiro *
+                            <input type="text" name="direccionDomicilio" id="direccionDomicilio">
+                        </label>
                         <div class="grid-2">
                             <label>
-                                Medio de contacto preferido *
-                                <select name="contactoPreferido" required>
-                                    <option value="">Selecciona un medio</option>
-                                    <option value="Teléfono">Teléfono</option>
-                                    <option value="Correo electrónico">Correo electrónico</option>
-                                    <option value="WhatsApp">WhatsApp</option>
+                                Presupuesto máximo autorizado sin consulta previa *
+                                <select name="presupuestoMaximo" required>
+                                    <option value="">Selecciona una opción</option>
+                                    <option value="Hasta $5.000">Hasta $5.000</option>
+                                    <option value="Hasta $15.000">Hasta $15.000</option>
+                                    <option value="Hasta $30.000">Hasta $30.000</option>
+                                    <option value="Sin límite">Sin límite</option>
+                                    <option value="Necesito consultar antes de aprobar cualquier gasto">Necesito consultar antes de aprobar cualquier gasto</option>
                                 </select>
                             </label>
                             <label>
-                                Fecha de entrega preferida
-                                <input type="date" name="fechaEntrega">
+                                Horario preferido para ser contactado *
+                                <select name="horarioPreferido" required>
+                                    <option value="">Selecciona un horario</option>
+                                    <option value="Mañana 9 a 12">Mañana 9 a 12</option>
+                                    <option value="Tarde 12 a 17">Tarde 12 a 17</option>
+                                    <option value="Tarde-noche 17 a 20">Tarde-noche 17 a 20</option>
+                                    <option value="Indistinto">Indistinto</option>
+                                </select>
                             </label>
                         </div>
-                        <label>
-                            Instrucciones adicionales para entrega o retiro
-                            <textarea name="instrucciones" rows="4" placeholder="Dirección de entrega, disponibilidad horaria, etc."></textarea>
+                        <fieldset class="field-group">
+                            <legend>Preferencia de contacto para notificaciones *</legend>
+                            <div class="checkbox-group">
+                                <label class="checkbox-label"><input type="checkbox" name="preferenciasContacto" value="WhatsApp"> WhatsApp</label>
+                                <label class="checkbox-label"><input type="checkbox" name="preferenciasContacto" value="Correo electrónico"> Correo electrónico</label>
+                                <label class="checkbox-label"><input type="checkbox" name="preferenciasContacto" value="Llamada telefónica"> Llamada telefónica</label>
+                            </div>
+                        </fieldset>
+                        <label class="checkbox-label required-checkbox">
+                            <input type="checkbox" name="aceptaDiagnostico" required>
+                            Acepto que el diagnóstico puede demorar hasta 48 horas hábiles *
+                        </label>
+                        <label class="checkbox-label required-checkbox">
+                            <input type="checkbox" name="aceptaTerminos" required>
+                            Acepto los <a href="#" class="link-inline">Términos y Condiciones</a> del servicio *
                         </label>
                     </fieldset>
 
                     <div class="form-actions">
                         <button type="submit" class="btn btn-primary">Registrar ingreso</button>
+                        <button type="reset" class="btn btn-secondary">Limpiar</button>
+                        <a href="index.html" class="btn btn-link">Volver al inicio</a>
                     </div>
                 </form>
             </div>
@@ -246,6 +330,17 @@
         const otraMarcaLabel = document.getElementById('otraMarcaLabel');
         const garantiaCheckbox = document.getElementById('garantiaCheckbox');
         const garantiaFields = document.getElementById('garantiaFields');
+        const modalidadEntregaInputs = document.querySelectorAll('input[name="modalidadEntrega"]');
+        const domicilioDireccionLabel = document.getElementById('domicilioDireccionLabel');
+        const direccionDomicilio = document.getElementById('direccionDomicilio');
+        const reparadoAntesCheckbox = document.getElementById('reparadoAntesCheckbox');
+        const reparadoAntesLabel = document.getElementById('reparadoAntesLabel');
+        const detalleReparadoAntes = document.getElementById('detalleReparadoAntes');
+        const descripcionProblema = document.getElementById('descripcionProblema');
+        const descripcionContador = document.getElementById('descripcionContador');
+        const reparadoAntesContador = document.getElementById('reparadoAntesContador');
+        const notificacionCheckboxes = document.querySelectorAll('input[name="preferenciasContacto"]');
+        const ingresoForm = document.getElementById('ingresoForm');
 
         tipoClienteInputs.forEach(input => {
             input.addEventListener('change', () => {
@@ -285,15 +380,66 @@
             }
         });
 
-        document.getElementById('ingresoForm').addEventListener('submit', function(event) {
+        modalidadEntregaInputs.forEach(input => {
+            input.addEventListener('change', () => {
+                if (input.value === 'Domicilio' && input.checked) {
+                    domicilioDireccionLabel.classList.remove('hidden');
+                    direccionDomicilio.required = true;
+                } else if (input.checked) {
+                    domicilioDireccionLabel.classList.add('hidden');
+                    direccionDomicilio.required = false;
+                }
+            });
+        });
+
+        reparadoAntesCheckbox.addEventListener('change', () => {
+            if (reparadoAntesCheckbox.checked) {
+                reparadoAntesLabel.classList.remove('hidden');
+                detalleReparadoAntes.required = false;
+            } else {
+                reparadoAntesLabel.classList.add('hidden');
+                detalleReparadoAntes.required = false;
+                detalleReparadoAntes.value = '';
+                reparadoAntesContador.textContent = '0 / 300';
+            }
+        });
+
+        const updateContador = (element, counter, max) => {
+            const length = element.value.length;
+            counter.textContent = `${length} / ${max}`;
+        };
+
+        descripcionProblema.addEventListener('input', () => {
+            updateContador(descripcionProblema, descripcionContador, 500);
+        });
+
+        detalleReparadoAntes.addEventListener('input', () => {
+            updateContador(detalleReparadoAntes, reparadoAntesContador, 300);
+        });
+
+        ingresoForm.addEventListener('submit', function(event) {
             const email = this.email.value;
             const emailConfirm = this.emailConfirm.value;
+            const notificacionSeleccionada = Array.from(notificacionCheckboxes).some(cb => cb.checked);
+
             if (email !== emailConfirm) {
                 event.preventDefault();
                 alert('Los correos electrónicos deben coincidir.');
                 return;
             }
-            // Simular envío
+
+            if (!notificacionSeleccionada) {
+                event.preventDefault();
+                alert('Seleccione al menos un medio de notificación.');
+                return;
+            }
+
+            if (domicilioDireccionLabel.classList.contains('hidden') === false && !direccionDomicilio.value.trim()) {
+                event.preventDefault();
+                alert('Ingrese la dirección completa para el retiro a domicilio.');
+                return;
+            }
+
             event.preventDefault();
             alert('Formulario enviado. Gracias por registrar tu equipo.');
             this.reset();
@@ -301,6 +447,24 @@
             otroDispositivoLabel.classList.add('hidden');
             otraMarcaLabel.classList.add('hidden');
             garantiaFields.classList.add('hidden');
+            domicilioDireccionLabel.classList.add('hidden');
+            reparadoAntesLabel.classList.add('hidden');
+            descripcionContador.textContent = '0 / 500';
+            reparadoAntesContador.textContent = '0 / 300';
+        });
+
+        ingresoForm.addEventListener('reset', () => {
+            empresaFields.classList.add('hidden');
+            otroDispositivoLabel.classList.add('hidden');
+            otraMarcaLabel.classList.add('hidden');
+            garantiaFields.classList.add('hidden');
+            domicilioDireccionLabel.classList.add('hidden');
+            reparadoAntesLabel.classList.add('hidden');
+            direccionDomicilio.required = false;
+            document.querySelector('#otroDispositivo').required = false;
+            document.querySelector('#otraMarca').required = false;
+            descripcionContador.textContent = '0 / 500';
+            reparadoAntesContador.textContent = '0 / 300';
         });
     </script>
 </body>
